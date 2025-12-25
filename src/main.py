@@ -4,10 +4,13 @@ Web-based Retrieval-Augmented Generation (RAG) microservice
 """
 
 import logging
+import os
 from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from src.api.routes import router as api_router
 
 # Configure logging
@@ -21,16 +24,23 @@ logger = logging.getLogger(__name__)
 app = FastAPI(
     title="NEXTRACION – Nextraction 2",
     description="Web-based RAG pipeline for evidence-first insights",
-    version="2.0"
+    version="2.0",
+    docs_url=None,  # Disable docs in production
+    redoc_url=None
 )
 
-# Add CORS middleware
+# Add rate limiter
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+
+# Configure CORS - restrict to specific origins
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:8001").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=allowed_origins,
+    allow_credentials=False,  # Disable credentials for security
+    allow_methods=["GET", "POST"],  # Only allow necessary methods
+    allow_headers=["Content-Type"],  # Only allow necessary headers
 )
 
 # Include routers
@@ -51,4 +61,6 @@ def read_root():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.getenv("PORT", 8001))
+    host = os.getenv("HOST", "127.0.0.1")
+    uvicorn.run(app, host=host, port=port)
