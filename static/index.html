@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXTRACION – Nextraction 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .status-bar {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .health-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: #27ae60;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: #27ae60;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .url-list {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .url-item {
+            background: white;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid #667eea;
+        }
+
+        .remove-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.3s ease;
+        }
+
+        .remove-btn:hover {
+            background: #c0392b;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d5dbdb;
+        }
+
+        .status-card {
+            background: #f0f7ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .status-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .status-value {
+            font-size: 1.3em;
+            color: #667eea;
+            font-weight: 700;
+        }
+
+        .status-error {
+            color: #e74c3c;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #ecf0f1;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .answer-box {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #27ae60;
+        }
+
+        .answer-text {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        .confidence-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .confidence-high {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .confidence-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .confidence-low {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .citations {
+            margin-top: 15px;
+        }
+
+        .citations h4 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .citation {
+            background: white;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+            font-size: 0.95em;
+        }
+
+        .citation-url {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .citation-url:hover {
+            text-decoration: underline;
+        }
+
+        .citation-quote {
+            color: #666;
+            font-style: italic;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+
+        .citation-score {
+            color: #999;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        .grounding-notes {
+            background: #e8f4f8;
+            padding: 12px;
+            border-radius: 6px;
+            color: #2c5282;
+            margin-top: 10px;
+            font-size: 0.95em;
+            border-left: 3px solid #3498db;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border-left: 3px solid #e74c3c;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border-left: 3px solid #27ae60;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 40px 20px;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .status-bar {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔗 NEXTRACION</h1>
+            <p class="subtitle">Web-based Retrieval-Augmented Generation Pipeline</p>
+        </header>
+
+        <div class="status-bar">
+            <div class="health-badge">
+                <span class="status-dot"></span>
+                <span id="health-status">Checking...</span>
+            </div>
+            <div style="text-align: right; color: #666;">
+                API running on <strong>127.0.0.1:8001</strong>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Ingest Section -->
+            <div class="card">
+                <h2>📥 Ingest Content</h2>
+                <div class="form-group">
+                    <label>Seed URL</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="url" id="seedUrl" placeholder="https://example.com" style="flex: 1;">
+                        <button onclick="addSeedUrl()" style="flex: 0; width: auto;" class="btn-secondary">Add</button>
+                    </div>
+                    <div class="url-list" id="urlList"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Allowed Domains (comma-separated)</label>
+                    <input type="text" id="allowlist" placeholder="example.com, docs.example.com" value="example.com">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group">
+                        <label>Max Pages</label>
+                        <input type="number" id="maxPages" value="10" min="1" max="500">
+                    </div>
+                    <div class="form-group">
+                        <label>Max Depth</label>
+                        <input type="number" id="maxDepth" value="2" min="0" max="5">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Notes (optional)</label>
+                    <textarea id="userNotes" placeholder="Add any metadata or tags..."></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button onclick="startIngest()" class="btn-primary">Start Ingestion</button>
+                </div>
+
+                <div id="ingestLoading" class="loading">
+                    <div class="spinner"></div>
+                    <p>Ingesting content...</p>
+                </div>
+
+                <div id="ingestStatus"></div>
+            </div>
+
+            <!-- Ask Section -->
+            <div class="card">
+                <h2>❓ Ask Question</h2>
+                
+                <div class="form-group">
+                    <label>Job ID</label>
+                    <input type="text" id="jobId" placeholder="Paste job ID from ingest result" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>Your Question</label>
+                    <textarea id="question" placeholder="Ask a question about the indexed content..."></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button onclick="askQuestion()" class="btn-primary">Get Answer</button>
+                    <button onclick="checkStatus()" class="btn-secondary">Check Status</button>
+                </div>
+
+                <div id="askLoading" class="loading">
+                    <div class="spinner"></div>
+                    <p>Generating answer...</p>
+                </div>
+
+                <div id="statusResult"></div>
+                <div id="answerResult"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://127.0.0.1:8001';
+        let seedUrls = [];
+
+        // Check health on load
+        window.addEventListener('load', () => {
+            checkHealth();
+            setInterval(checkHealth, 30000);
+        });
+
+        async function checkHealth() {
+            try {
+                const res = await fetch(`${API_BASE}/health`);
+                if (res.ok) {
+                    document.getElementById('health-status').textContent = '✅ Service Healthy';
+                    document.querySelector('.status-dot').style.background = '#27ae60';
+                } else {
+                    document.getElementById('health-status').textContent = '⚠️ Service Issue';
+                    document.querySelector('.status-dot').style.background = '#f39c12';
+                }
+            } catch (err) {
+                document.getElementById('health-status').textContent = '❌ Offline';
+                document.querySelector('.status-dot').style.background = '#e74c3c';
+            }
+        }
+
+        function addSeedUrl() {
+            const input = document.getElementById('seedUrl');
+            const url = input.value.trim();
+            
+            if (!url) {
+                alert('Please enter a URL');
+                return;
+            }
+
+            if (!seedUrls.includes(url)) {
+                seedUrls.push(url);
+                renderUrlList();
+                input.value = '';
+            }
+        }
+
+        function removeSeedUrl(url) {
+            seedUrls = seedUrls.filter(u => u !== url);
+            renderUrlList();
+        }
+
+        function renderUrlList() {
+            const list = document.getElementById('urlList');
+            if (seedUrls.length === 0) {
+                list.innerHTML = '<p style="color: #999; text-align: center; padding: 10px;">No URLs added yet</p>';
+                return;
+            }
+
+            list.innerHTML = seedUrls.map(url => `
+                <div class="url-item">
+                    <span>${url}</span>
+                    <button class="remove-btn" onclick="removeSeedUrl('${url}')">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        async function startIngest() {
+            if (seedUrls.length === 0) {
+                alert('Please add at least one seed URL');
+                return;
+            }
+
+            const allowlist = document.getElementById('allowlist').value
+                .split(',')
+                .map(s => s.trim())
+                .filter(s => s);
+
+            if (allowlist.length === 0) {
+                alert('Please specify allowed domains');
+                return;
+            }
+
+            const payload = {
+                seed_urls: seedUrls,
+                domain_allowlist: allowlist,
+                max_pages: parseInt(document.getElementById('maxPages').value),
+                max_depth: parseInt(document.getElementById('maxDepth').value),
+                user_notes: document.getElementById('userNotes').value || undefined
+            };
+
+            document.getElementById('ingestLoading').style.display = 'block';
+            document.getElementById('ingestStatus').innerHTML = '';
+
+            try {
+                const res = await fetch(`${API_BASE}/ingest`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                document.getElementById('ingestLoading').style.display = 'none';
+
+                if (res.ok) {
+                    document.getElementById('jobId').value = data.job_id;
+                    document.getElementById('ingestStatus').innerHTML = `
+                        <div class="success-message">
+                            <strong>✅ Ingestion Started!</strong><br>
+                            Job ID: <strong>${data.job_id}</strong><br>
+                            Accepted Pages: ${data.accepted_pages}
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('ingestStatus').innerHTML = `
+                        <div class="error-message">
+                            <strong>❌ Error:</strong> ${data.detail || 'Unknown error'}
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                document.getElementById('ingestLoading').style.display = 'none';
+                document.getElementById('ingestStatus').innerHTML = `
+                    <div class="error-message">
+                        <strong>❌ Error:</strong> ${err.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function checkStatus() {
+            const jobId = document.getElementById('jobId').value;
+            if (!jobId) {
+                alert('Please enter or paste a Job ID');
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/status/${jobId}`);
+                const data = await res.json();
+
+                let stateColor = '#667eea';
+                if (data.state === 'done') stateColor = '#27ae60';
+                if (data.state === 'failed') stateColor = '#e74c3c';
+                if (data.state === 'running') stateColor = '#f39c12';
+
+                document.getElementById('statusResult').innerHTML = `
+                    <div class="status-card" style="border-left-color: ${stateColor}">
+                        <div class="status-label">Job Status</div>
+                        <div class="status-value" style="color: ${stateColor}">${data.state.toUpperCase()}</div>
+                        <div style="margin-top: 10px;">
+                            <div><strong>Pages Fetched:</strong> ${data.pages_fetched}</div>
+                            <div><strong>Pages Indexed:</strong> ${data.pages_indexed}</div>
+                            ${data.errors.length > 0 ? `<div><strong>Errors:</strong> ${data.errors.length}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            } catch (err) {
+                document.getElementById('statusResult').innerHTML = `
+                    <div class="error-message">Error: ${err.message}</div>
+                `;
+            }
+        }
+
+        async function askQuestion() {
+            const jobId = document.getElementById('jobId').value;
+            const question = document.getElementById('question').value.trim();
+
+            if (!jobId) {
+                alert('Please enter or paste a Job ID');
+                return;
+            }
+
+            if (!question) {
+                alert('Please enter a question');
+                return;
+            }
+
+            document.getElementById('askLoading').style.display = 'block';
+            document.getElementById('answerResult').innerHTML = '';
+
+            try {
+                const res = await fetch(`${API_BASE}/ask`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ job_id: jobId, question })
+                });
+
+                const data = await res.json();
+
+                document.getElementById('askLoading').style.display = 'none';
+
+                if (res.ok) {
+                    let confidenceClass = 'confidence-low';
+                    if (data.confidence === 'high') confidenceClass = 'confidence-high';
+                    if (data.confidence === 'medium') confidenceClass = 'confidence-medium';
+
+                    let citationsHtml = '';
+                    if (data.citations && data.citations.length > 0) {
+                        citationsHtml = `
+                            <div class="citations">
+                                <h4>📚 Citations</h4>
+                                ${data.citations.map(c => `
+                                    <div class="citation">
+                                        <a href="${c.url}" target="_blank" class="citation-url">${c.title}</a>
+                                        <div class="citation-quote">"${c.quote.substring(0, 80)}..."</div>
+                                        <div class="citation-score">Score: ${(c.score * 100).toFixed(0)}%</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                    }
+
+                    document.getElementById('answerResult').innerHTML = `
+                        <div class="answer-box">
+                            <div class="confidence-badge ${confidenceClass}">
+                                Confidence: ${data.confidence.toUpperCase()}
+                            </div>
+                            <div class="answer-text">${data.answer}</div>
+                            ${citationsHtml}
+                            <div class="grounding-notes">
+                                <strong>📝 Grounding Notes:</strong> ${data.grounding_notes}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('answerResult').innerHTML = `
+                        <div class="error-message">
+                            <strong>❌ Error:</strong> ${data.detail || 'Could not generate answer'}
+                        </div>
+                    `;
+                }
+            } catch (err) {
+                document.getElementById('askLoading').style.display = 'none';
+                document.getElementById('answerResult').innerHTML = `
+                    <div class="error-message">Error: ${err.message}</div>
+                `;
+            }
+        }
+
+        // Allow Enter key in inputs
+        document.getElementById('seedUrl').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addSeedUrl();
+        });
+
+        document.getElementById('question').addEventListener('keypress', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') askQuestion();
+        });
+    </script>
+</body>
+</html>

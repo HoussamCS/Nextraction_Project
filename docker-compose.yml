@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  nextracion:
+    build: .
+    container_name: nextracion-rag
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_MODEL=text-embedding-3-small
+      - OPENAI_CHAT_MODEL=gpt-4-turbo
+      - CHROMA_DB_PATH=/app/data/chroma_db
+      - DEFAULT_MAX_PAGES=20
+      - DEFAULT_MAX_DEPTH=2
+      - TOP_K_CHUNKS=5
+      - MIN_SIMILARITY_SCORE=0.3
+      - JOB_TIMEOUT=300
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  data:
