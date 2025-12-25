@@ -1,11 +1,11 @@
 # NEXTRACION Quick Reference
 
-## 🎯 What Is It?
+## What Is It?
 A tool that crawls websites, indexes their content, and answers questions with **citations and evidence**.
 
-## ⚡ 3-Step Workflow
+## 3-Step Workflow
 
-### Step 1️⃣ INGEST (Left Panel)
+### Step 1 INGEST (Left Panel)
 ```
 1. Add seed URL (e.g., https://docs.example.com)
 2. Set allowed domains (e.g., docs.example.com)
@@ -32,41 +32,41 @@ A tool that crawls websites, indexes their content, and answers questions with *
 
 ---
 
-## 🎨 UI Sections
+## UI Sections
 
 | Section | Purpose | Action |
 |---------|---------|--------|
-| **📥 Ingest** | Crawl websites | Enter URLs, configure limits, click Start |
-| **Job ID** | Track ingest job | Copy from Ingest result, paste in Ask |
-| **❓ Ask** | Query content | Paste Job ID, ask question, view answer |
-| **Health Status** | Check API | Green = working, Red = offline |
-| **Citations** | See sources | Click URL to visit source page |
+| Ingest | Crawl websites | Enter URLs, configure limits, click Start |
+| Job ID | Track ingest job | Copy from Ingest result, paste in Ask |
+| Ask | Query content | Paste Job ID, ask question, view answer |
+| Health Status | Check API | Green = working, Red = offline |
+| Citations | See sources | Click URL to visit source page |
 
 ---
 
-## 📊 Answer Components
+## Answer Components
 
 When you get an answer, you'll see:
 
 ```
-🟢 Confidence: HIGH/MEDIUM/LOW
+Confidence: HIGH/MEDIUM/LOW
 └─ Green = Trust it, Yellow = Check it, Red = Verify separately
 
 Answer Text
 └─ The actual response to your question
 
-📚 Citations
+Citations
 ├─ Title: Where it came from
 ├─ Quote: Exact text supporting answer
 └─ Score: 85% (relevance percentage)
 
-📝 Grounding Notes
+Grounding Notes
 └─ Why the AI has this confidence level
 ```
 
 ---
 
-## 💾 Configuration Examples
+## Configuration Examples
 
 ### Quick Test (2-3 minutes)
 ```
@@ -96,7 +96,7 @@ Max Depth: 3
 
 ---
 
-## ❌ Common Issues & Fixes
+## Common Issues & Fixes
 
 | Issue | Cause | Fix |
 |-------|-------|-----|
@@ -108,7 +108,7 @@ Max Depth: 3
 
 ---
 
-## 🔑 Key Concepts
+## Key Concepts
 
 **Seed URL** = Starting page for crawling
 **Domain Allowlist** = Which websites are allowed to crawl
@@ -120,7 +120,7 @@ Max Depth: 3
 
 ---
 
-## ✅ Best Practices
+## Best Practices
 
 - Start with **small crawls** (5-10 pages) to test
 - Use **specific seed URLs** (not just domain root)
@@ -132,7 +132,7 @@ Max Depth: 3
 
 ---
 
-## 🚀 Example: Real Usage
+## Example: Real Usage
 
 ### You have: Stripe API Documentation
 ```
@@ -166,7 +166,7 @@ STEP 3: Ask
 
 ---
 
-## 🔒 Security Notes
+## Security Notes
 
 - Your indexed content stays **local** (on your computer)
 - OpenAI API key goes in `.env` file (never in code)
@@ -176,7 +176,7 @@ STEP 3: Ask
 
 ---
 
-## 💡 Pro Tips
+## Pro Tips
 
 1. **Organize by Job ID** - Create a spreadsheet tracking what each job indexed
 2. **Start narrow** - Test with 5 pages, expand if needed
@@ -186,16 +186,16 @@ STEP 3: Ask
 
 ---
 
-## 📞 When to Use
+## When to Use
 
-✅ Use NEXTRACION for:
+Use NEXTRACION for:
 - Product documentation chatbots
 - Company knowledge bases
 - FAQ automation
 - Research data extraction
 - Training material indexing
 
-❌ Don't use for:
+Don't use for:
 - Real-time data (stock prices, weather)
 - Websites you don't have permission to crawl
 - Data requiring absolute accuracy without verification
@@ -203,5 +203,4 @@ STEP 3: Ask
 
 ---
 
-**Made with ❤️ for evidence-based AI**
-*NEXTRACION – Nextraction 2 | v2.0*
+NEXTRACION – Nextraction 2 | v2.0

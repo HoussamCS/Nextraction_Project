@@ -116,10 +116,10 @@ Pages Indexed: 2
 ```
 
 **Job States:**
-- 🟡 **QUEUED** – Waiting to start
-- 🟠 **RUNNING** – Currently crawling and indexing
-- 🟢 **DONE** – Complete, ready for questions
-- 🔴 **FAILED** – Error occurred
+- QUEUED – Waiting to start
+- RUNNING – Currently crawling and indexing
+- DONE – Complete, ready for questions
+- FAILED – Error occurred
 
 **Keep checking until status shows "DONE"**
 
@@ -156,9 +156,9 @@ NEXTRACION will:
 You'll see:
 
 **Confidence Badge** (color-coded)
-- 🟢 **HIGH** – Strong evidence, multiple sources
-- 🟡 **MEDIUM** – Adequate evidence, some uncertainty
-- 🔴 **LOW** – Weak evidence, should be verified
+- HIGH – Strong evidence, multiple sources
+- MEDIUM – Adequate evidence, some uncertainty
+- LOW – Weak evidence, should be verified
 
 **The Answer**
 - Grounded only in indexed content
@@ -176,7 +176,7 @@ You'll see:
 
 ---
 
-## 💡 Example: Complete Workflow
+## Example: Complete Workflow
 
 ### Scenario: Index OpenAI Documentation
 
@@ -266,21 +266,21 @@ Why: Focused, high-quality results
 
 ---
 
-## 🔍 Understanding Confidence Levels
+## Understanding Confidence Levels
 
-### HIGH Confidence ✅
+### HIGH Confidence
 - Multiple relevant sources found
 - High similarity scores (0.8+)
 - Clear, unambiguous evidence
-- **Trust this answer**
+- Trust this answer
 
-### MEDIUM Confidence ⚠️
+### MEDIUM Confidence
 - Some relevant sources found
 - Medium similarity scores (0.6-0.8)
 - Partial evidence, some interpretation
-- **Verify if critical**
+- Verify if critical
 
-### LOW Confidence ❌
+### LOW Confidence
 - Few relevant sources
 - Low similarity scores (<0.6)
 - Weak or contradictory evidence
@@ -330,7 +330,7 @@ Why: Focused, high-quality results
 
 ---
 
-## 📊 How It Works (Technical Overview)
+## How It Works (Technical Overview)
 
 ### The RAG Pipeline
 
@@ -359,15 +359,15 @@ Why: Focused, high-quality results
 
 ### Anti-Hallucination Features
 
-- ❌ No making up information
-- ✅ Answers must cite indexed content
-- ✅ Refusal when evidence insufficient
-- ✅ Confidence scoring based on evidence quality
-- ✅ Grounding notes explaining source quality
+- No making up information
+- Answers must cite indexed content
+- Refusal when evidence insufficient
+- Confidence scoring based on evidence quality
+- Grounding notes explaining source quality
 
 ---
 
-## 🚀 Advanced Tips
+## Advanced Tips
 
 ### 1. Multiple Ingestion Jobs
 You can run multiple ingestion jobs with different domains:
@@ -426,9 +426,9 @@ The UI works on phones/tablets:
 
 ---
 
-## ✨ Best Practices
+## Best Practices
 
-### ✅ DO:
+### DO:
 - Start with small test crawls
 - Use specific, focused seed URLs
 - Include all relevant domains in allowlist
@@ -437,7 +437,7 @@ The UI works on phones/tablets:
 - Check confidence levels before trusting answers
 - Verify important answers with source documents
 
-### ❌ DON'T:
+### DON'T:
 - Crawl sites you don't own or have permission for
 - Use overly broad domain allowlists
 - Ingest millions of pages (system limitations)

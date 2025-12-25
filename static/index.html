@@ -439,7 +439,7 @@
         <div class="main-content">
             <!-- Ingest Section -->
             <div class="card">
-                <h2>📥 Ingest Content</h2>
+                <h2>Ingest Content</h2>
                 <div class="form-group">
                     <label>Seed URL</label>
                     <div style="display: flex; gap: 10px;">
@@ -484,7 +484,7 @@
 
             <!-- Ask Section -->
             <div class="card">
-                <h2>❓ Ask Question</h2>
+                <h2>Ask Question</h2>
                 
                 <div class="form-group">
                     <label>Job ID</label>
@@ -526,14 +526,14 @@
             try {
                 const res = await fetch(`${API_BASE}/health`);
                 if (res.ok) {
-                    document.getElementById('health-status').textContent = '✅ Service Healthy';
+                    document.getElementById('health-status').textContent = 'Service Healthy';
                     document.querySelector('.status-dot').style.background = '#27ae60';
                 } else {
-                    document.getElementById('health-status').textContent = '⚠️ Service Issue';
+                    document.getElementById('health-status').textContent = 'Service Issue';
                     document.querySelector('.status-dot').style.background = '#f39c12';
                 }
             } catch (err) {
-                document.getElementById('health-status').textContent = '❌ Offline';
+                document.getElementById('health-status').textContent = 'Offline';
                 document.querySelector('.status-dot').style.background = '#e74c3c';
             }
         }
@@ -616,7 +616,7 @@
                     document.getElementById('jobId').value = data.job_id;
                     document.getElementById('ingestStatus').innerHTML = `
                         <div class="success-message">
-                            <strong>✅ Ingestion Started!</strong><br>
+                            <strong>Ingestion Started!</strong><br>
                             Job ID: <strong>${data.job_id}</strong><br>
                             Accepted Pages: ${data.accepted_pages}
                         </div>
@@ -624,7 +624,7 @@
                 } else {
                     document.getElementById('ingestStatus').innerHTML = `
                         <div class="error-message">
-                            <strong>❌ Error:</strong> ${data.detail || 'Unknown error'}
+                            <strong>Error:</strong> ${data.detail || 'Unknown error'}
                         </div>
                     `;
                 }
@@ -632,7 +632,7 @@
                 document.getElementById('ingestLoading').style.display = 'none';
                 document.getElementById('ingestStatus').innerHTML = `
                     <div class="error-message">
-                        <strong>❌ Error:</strong> ${err.message}
+                        <strong>Error:</strong> ${err.message}
                     </div>
                 `;
             }
@@ -729,14 +729,14 @@
                             <div class="answer-text">${data.answer}</div>
                             ${citationsHtml}
                             <div class="grounding-notes">
-                                <strong>📝 Grounding Notes:</strong> ${data.grounding_notes}
+                                <strong>Grounding Notes:</strong> ${data.grounding_notes}
                             </div>
                         </div>
                     `;
                 } else {
                     document.getElementById('answerResult').innerHTML = `
                         <div class="error-message">
-                            <strong>❌ Error:</strong> ${data.detail || 'Could not generate answer'}
+                            <strong>Error:</strong> ${data.detail || 'Could not generate answer'}
                         </div>
                     `;
                 }
