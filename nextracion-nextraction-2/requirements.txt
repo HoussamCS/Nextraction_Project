@@ -1,0 +1,9 @@
+FastAPI
+uvicorn
+beautifulsoup4
+requests
+openai
+chromadb
+pydantic
+python-dotenv
+httpx
