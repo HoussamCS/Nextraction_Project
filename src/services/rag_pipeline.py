@@ -96,10 +96,26 @@ class RAGPipeline:
                     "grounding_notes": "No valid job state"
                 }
             
-            # Switch to job's collection
-            self.embeddings_service.collection = self.embeddings_service.chroma_client.get_collection(
-                name=f"job_{job_id}"
-            )
+            # Load or create collection for this job
+            try:
+                self.embeddings_service.get_or_create_collection(f"job_{job_id}")
+            except Exception as e:
+                logger.error(f"[Job {job_id}] Failed to get collection: {e}")
+                return {
+                    "answer": "Could not retrieve indexed content. Job data may not exist or be corrupted.",
+                    "citations": [],
+                    "confidence": "low",
+                    "grounding_notes": f"Collection access error: {str(e)}"
+                }
+            
+            if not self.embeddings_service.collection:
+                logger.error(f"[Job {job_id}] Collection is None after initialization")
+                return {
+                    "answer": "Vector database is not available.",
+                    "citations": [],
+                    "confidence": "low",
+                    "grounding_notes": "Database initialization error"
+                }
             
             # 1. Retrieve relevant chunks
             retrieved_chunks = self.embeddings_service.search(
@@ -173,7 +189,11 @@ Question: {question}
 Answer based ONLY on the evidence provided. Reference chunk numbers for each fact."""
         
         try:
-            response = openai.ChatCompletion.create(
+            from openai import OpenAI
+            from src.utils.config import settings
+            
+            client = OpenAI(api_key=settings.openai_api_key)
+            response = client.chat.completions.create(
                 model=self.chat_model,
                 messages=[
                     {"role": "system", "content": system_prompt},
@@ -182,7 +202,7 @@ Answer based ONLY on the evidence provided. Reference chunk numbers for each fac
                 temperature=0.2,  # Lower temp for more factual consistency
                 max_tokens=500
             )
-            answer = response["choices"][0]["message"]["content"]
+            answer = response.choices[0].message.content
             logger.debug(f"Generated answer: {answer[:100]}...")
             return answer
         except Exception as e:

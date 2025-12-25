@@ -149,9 +149,16 @@
             margin-bottom: 8px;
             border-radius: 4px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 10px;
             border-left: 3px solid #667eea;
+        }
+
+        .url-item span {
+            flex: 1;
+            min-width: 0;
+            word-break: break-all;
+            overflow-wrap: break-word;
         }
 
         .remove-btn {
@@ -163,6 +170,8 @@
             cursor: pointer;
             font-size: 0.9em;
             transition: background 0.3s ease;
+            flex-shrink: 0;
+            white-space: nowrap;
         }
 
         .remove-btn:hover {

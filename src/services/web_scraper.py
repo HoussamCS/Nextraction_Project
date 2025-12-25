@@ -131,16 +131,22 @@ class WebScraper:
             self.errors.append(error_msg)
             self.visited_urls.add(url)
             return "", False
+        except requests.exceptions.ConnectionError as e:
+            if "Name or service not known" in str(e) or "getaddrinfo failed" in str(e) or "nodename nor servname provided" in str(e):
+                error_msg = f"DNS resolution failed for {url} - domain may not exist or be unreachable"
+            else:
+                error_msg = f"Connection failed for {url}: {str(e)}"
+            logger.warning(error_msg)
+            self.visited_urls.add(url)
+            return "", False
         except requests.RequestException as e:
             error_msg = f"Request failed for {url}: {str(e)}"
             logger.error(error_msg)
-            self.errors.append(error_msg)
             self.visited_urls.add(url)
             return "", False
         except Exception as e:
             error_msg = f"Unexpected error fetching {url}: {str(e)}"
             logger.error(error_msg)
-            self.errors.append(error_msg)
             self.visited_urls.add(url)
             return "", False
     
@@ -151,16 +157,25 @@ class WebScraper:
         """
         pages_data = []
         to_visit = [(url, 0) for url in seed_urls]  # (url, depth)
+        logger.info(f"Starting crawl with {len(seed_urls)} seed URLs, max_depth={self.max_depth}, max_pages={self.max_pages}")
+        logger.info(f"Allowed domains: {self.domain_allowlist}")
         
         while to_visit and self.pages_fetched < self.max_pages:
             url, depth = to_visit.pop(0)
+            logger.info(f"Processing URL (depth {depth}): {url}")
             
             # Skip if depth exceeded or already visited
-            if depth > self.max_depth or url in self.visited_urls:
+            if depth > self.max_depth:
+                logger.info(f"Skipping {url} - depth {depth} exceeds max {self.max_depth}")
+                continue
+            
+            if url in self.visited_urls:
+                logger.info(f"Skipping {url} - already visited")
                 continue
             
             # Skip if domain not allowed
             if not self._is_allowed_domain(url):
+                logger.warning(f"Skipping {url} - domain not in allowlist")
                 continue
             
             # Fetch page
