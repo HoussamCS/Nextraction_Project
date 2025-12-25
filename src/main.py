@@ -9,8 +9,6 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from slowapi import Limiter
-from slowapi.util import get_remote_address
 from src.api.routes import router as api_router
 
 # Configure logging
@@ -28,10 +26,6 @@ app = FastAPI(
     docs_url=None,  # Disable docs in production
     redoc_url=None
 )
-
-# Add rate limiter
-limiter = Limiter(key_func=get_remote_address)
-app.state.limiter = limiter
 
 # Configure CORS - restrict to specific origins
 allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:8001").split(",")

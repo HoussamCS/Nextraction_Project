@@ -5,10 +5,10 @@
 ### Security ✅
 - [x] API key NOT committed to git (using `.env.example`)
 - [x] CORS restricted to specific domains (not `*`)
-- [x] Rate limiting enabled
 - [x] API docs disabled in production (redoc_url=None, docs_url=None)
 - [ ] **TODO:** Add API key validation/authentication before production
 - [ ] **TODO:** Set up HTTPS/SSL certificate
+- [ ] **TODO:** Add rate limiting (implement with Nginx or dedicated service)
 
 ### Configuration ✅
 - [x] Port configurable via `PORT` environment variable
@@ -93,11 +93,12 @@ curl http://127.0.0.1:8001/health
 ## Post-Deployment
 
 ### Critical Tasks
-- [ ] Test rate limiting (5+ requests/minute should be blocked)
-- [ ] Verify CORS restriction (requests from wrong domain should fail)
+- [ ] Test CORS restriction (requests from wrong domain should fail)
+- [ ] Verify only POST and GET methods are allowed
 - [ ] Monitor OpenAI API costs
 - [ ] Set up error alerts
 - [ ] Backup vector database (if using persistent storage)
+- [ ] Set up rate limiting via Nginx or API Gateway
 
 ### Optional Enhancements
 - [ ] Add request size limits (URL length, question length)
