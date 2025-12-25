@@ -302,14 +302,90 @@
             color: #721c24;
         }
 
-        .citations {
+        .answer-section {
+            margin-bottom: 20px;
+        }
+
+        .answer-text {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            line-height: 1.6;
+            color: #333;
+            margin: 15px 0;
+        }
+
+        .grounding-notes {
+            background: #f0f0f0;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.95em;
             margin-top: 15px;
+            border-left: 3px solid #667eea;
+        }
+
+        .citations-section {
+            margin-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            padding-top: 15px;
+        }
+
+        .citations-header {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 6px;
+            margin-bottom: 0;
+            transition: background 0.2s;
+        }
+
+        .citations-header:hover {
+            background: #e8e8e8;
+        }
+
+        .citations-header h4 {
+            color: #333;
+            margin: 0;
+            font-size: 1em;
+            flex: 1;
+        }
+
+        .citations-toggle {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            font-weight: bold;
+            color: #667eea;
+            transition: transform 0.3s;
+        }
+
+        .citations-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .citations-content {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .citations-content.expanded {
+            display: block;
+        }
+
+        .citations {
+            margin-top: 10px;
         }
 
         .citations h4 {
             color: #333;
             margin-bottom: 10px;
             font-size: 1em;
+            display: none;
         }
 
         .citation {
@@ -705,32 +781,43 @@
                     if (data.confidence === 'high') confidenceClass = 'confidence-high';
                     if (data.confidence === 'medium') confidenceClass = 'confidence-medium';
 
-                    let citationsHtml = '';
+                    let citationsSection = '';
                     if (data.citations && data.citations.length > 0) {
-                        citationsHtml = `
-                            <div class="citations">
-                                <h4>📚 Citations</h4>
-                                ${data.citations.map(c => `
-                                    <div class="citation">
-                                        <a href="${c.url}" target="_blank" class="citation-url">${c.title}</a>
-                                        <div class="citation-quote">"${c.quote.substring(0, 80)}..."</div>
-                                        <div class="citation-score">Score: ${(c.score * 100).toFixed(0)}%</div>
+                        let citationsHtml = data.citations.map(c => `
+                            <div class="citation">
+                                <a href="${c.url}" target="_blank" class="citation-url">${c.title}</a>
+                                <div class="citation-quote">"${c.quote.substring(0, 80)}..."</div>
+                                <div class="citation-score">Score: ${(c.score * 100).toFixed(0)}%</div>
+                            </div>
+                        `).join('');
+
+                        citationsSection = `
+                            <div class="citations-section">
+                                <div class="citations-header" onclick="toggleCitations(this)">
+                                    <h4>Citations (${data.citations.length})</h4>
+                                    <span class="citations-toggle collapsed">></span>
+                                </div>
+                                <div class="citations-content">
+                                    <div class="citations">
+                                        ${citationsHtml}
                                     </div>
-                                `).join('')}
+                                </div>
                             </div>
                         `;
                     }
 
                     document.getElementById('answerResult').innerHTML = `
                         <div class="answer-box">
-                            <div class="confidence-badge ${confidenceClass}">
-                                Confidence: ${data.confidence.toUpperCase()}
+                            <div class="answer-section">
+                                <div class="confidence-badge ${confidenceClass}">
+                                    Confidence: ${data.confidence.toUpperCase()}
+                                </div>
+                                <div class="answer-text">${data.answer}</div>
+                                <div class="grounding-notes">
+                                    <strong>Grounding Notes:</strong> ${data.grounding_notes}
+                                </div>
                             </div>
-                            <div class="answer-text">${data.answer}</div>
-                            ${citationsHtml}
-                            <div class="grounding-notes">
-                                <strong>Grounding Notes:</strong> ${data.grounding_notes}
-                            </div>
+                            ${citationsSection}
                         </div>
                     `;
                 } else {
@@ -746,6 +833,15 @@
                     <div class="error-message">Error: ${err.message}</div>
                 `;
             }
+        }
+
+        // Toggle citations section
+        function toggleCitations(header) {
+            const content = header.nextElementSibling;
+            const toggle = header.querySelector('.citations-toggle');
+            
+            content.classList.toggle('expanded');
+            toggle.classList.toggle('collapsed');
         }
 
         // Allow Enter key in inputs

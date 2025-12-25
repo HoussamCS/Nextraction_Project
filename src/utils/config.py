@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     top_k_chunks: int = 5
     min_similarity_score: float = 0.3
     job_timeout: int = 300
+    allowed_origins: str = "http://localhost:3000,http://127.0.0.1:8001"
     
     class Config:
         env_file = ".env"
