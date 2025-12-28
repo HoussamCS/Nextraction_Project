@@ -156,7 +156,7 @@ STEP 3: Ask
 
 ---
 
-## 🌐 Access Points
+##  Access Points
 
 | Endpoint | Purpose |
 |----------|---------|
