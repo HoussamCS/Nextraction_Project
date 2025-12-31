@@ -17,19 +17,33 @@ class WebScraper:
         self.visited_urls: Set[str] = set()
         self.pages_fetched = 0
         self.errors: List[str] = []
-        self.user_agent = "Nextracion/2.0 (Evidence-based RAG; +https://nextracion.ai)"
+        self.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
         self.timeout = 10
         self.session = requests.Session()
-        self.session.headers.update({"User-Agent": self.user_agent})
+        self.session.headers.update({
+            "User-Agent": self.user_agent,
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.5",
+            "Accept-Encoding": "gzip, deflate",
+            "DNT": "1",
+            "Connection": "keep-alive",
+            "Upgrade-Insecure-Requests": "1"
+        })
     
     def _is_allowed_domain(self, url: str) -> bool:
         """Check if URL domain is in allowlist."""
         try:
             domain = urlparse(url).netloc
             # Remove www. prefix for comparison
-            domain = domain.replace("www.", "")
-            return any(allowed.replace("www.", "") in domain or domain in allowed.replace("www.", "") 
-                      for allowed in self.domain_allowlist)
+            domain_clean = domain.replace("www.", "")
+            
+            for allowed in self.domain_allowlist:
+                allowed_clean = allowed.replace("www.", "")
+                # Check if allowed domain is a suffix of the URL domain (handles subdomains)
+                # e.g., "wikipedia.org" matches "en.wikipedia.org"
+                if domain_clean == allowed_clean or domain_clean.endswith("." + allowed_clean):
+                    return True
+            return False
         except Exception as e:
             logger.error(f"Domain check failed for {url}: {e}")
             return False
@@ -128,6 +142,16 @@ class WebScraper:
         except requests.Timeout:
             error_msg = f"Timeout fetching {url}"
             logger.error(error_msg)
+            self.errors.append(error_msg)
+            self.visited_urls.add(url)
+            return "", False
+        except requests.exceptions.HTTPError as e:
+            if e.response.status_code == 403:
+                error_msg = f"Access denied (403) for {url} - server rejected request"
+                logger.warning(error_msg)
+            else:
+                error_msg = f"HTTP error {e.response.status_code} for {url}"
+                logger.error(error_msg)
             self.errors.append(error_msg)
             self.visited_urls.add(url)
             return "", False

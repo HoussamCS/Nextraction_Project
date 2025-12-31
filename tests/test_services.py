@@ -66,16 +66,16 @@ class TestWebScraper:
         
         text, title = scraper._clean_html(html, "https://example.com")
         
-        # Should extract title
+        # Extracting title
         assert title == "Test Page"
         
-        # Should include main content
+        # Including main content
         assert "Important Content" in text
         
-        # Should not include script
+        # Not including script
         assert "console.log" not in text
         
-        # Should not include nav/footer
+        # Not including nav/footer
         assert "Navigation" not in text or "Copyright" not in text
 
 

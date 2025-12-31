@@ -97,17 +97,21 @@ class EmbeddingsService:
     
     def get_or_create_collection(self, collection_name: str = "documents"):
         """Get or create a collection (Chroma or in-memory)."""
+        logger.info(f"get_or_create_collection called with: {collection_name}")
+        logger.info(f"use_memory_store: {self.use_memory_store}, available collections: {list(self.collections.keys()) if self.use_memory_store else 'N/A'}")
+        
         if self.use_memory_store:
             # Check if collection already exists in memory
             if collection_name in self.collections:
-                logger.info(f"Retrieved existing in-memory collection: {collection_name} with {self.collections[collection_name].count} chunks")
                 self.collection = self.collections[collection_name]
+                logger.info(f"Retrieved existing in-memory collection: {collection_name} with {self.collection.count} chunks")
                 return self.collection
             
             # Create new collection and store it
+            logger.info(f"Creating NEW in-memory collection: {collection_name}")
             self.collection = SimpleInMemoryVectorStore(collection_name)
             self.collections[collection_name] = self.collection
-            logger.info(f"Created in-memory collection: {collection_name}")
+            logger.info(f"Created in-memory collection: {collection_name}. Total collections now: {list(self.collections.keys())}")
             return self.collection
         
         if not self.chroma_client:
@@ -192,14 +196,14 @@ class EmbeddingsService:
         """
         logger.info(f"[{job_id}] Starting to store {len(pages)} pages")
         
-        # Initialize collection if not already done
+        # Always get or create the collection for this specific job
+        collection_name = f"job_{job_id}"
+        self.get_or_create_collection(collection_name)
+        
         if not self.collection:
-            logger.info(f"[{job_id}] Creating new collection for job")
-            self.get_or_create_collection(f"job_{job_id}")
-            if not self.collection:
-                error_msg = "Failed to create vector database collection"
-                logger.error(f"[{job_id}] {error_msg}")
-                return 0, [error_msg]
+            error_msg = "Failed to create vector database collection"
+            logger.error(f"[{job_id}] {error_msg}")
+            return 0, [error_msg]
         
         logger.info(f"[{job_id}] Collection ready: {self.collection.name}")
         

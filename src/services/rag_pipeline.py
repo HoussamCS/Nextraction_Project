@@ -97,8 +97,12 @@ class RAGPipeline:
                 }
             
             # Load or create collection for this job
+            collection_name = f"job_{job_id}"
             try:
-                self.embeddings_service.get_or_create_collection(f"job_{job_id}")
+                collection = self.embeddings_service.get_or_create_collection(collection_name)
+                logger.info(f"[Job {job_id}] Collection retrieved/created with name: {collection_name}")
+                if collection:
+                    logger.info(f"[Job {job_id}] Collection has {collection.count if hasattr(collection, 'count') else '?'} chunks")
             except Exception as e:
                 logger.error(f"[Job {job_id}] Failed to get collection: {e}")
                 return {
@@ -108,13 +112,14 @@ class RAGPipeline:
                     "grounding_notes": f"Collection access error: {str(e)}"
                 }
             
-            if not self.embeddings_service.collection:
-                logger.error(f"[Job {job_id}] Collection is None after initialization")
+            # Check collection has data
+            if not self.embeddings_service.collection or (hasattr(self.embeddings_service.collection, 'count') and self.embeddings_service.collection.count == 0):
+                logger.warning(f"[Job {job_id}] Collection is empty. Available collections: {list(self.embeddings_service.collections.keys())}")
                 return {
-                    "answer": "Vector database is not available.",
+                    "answer": "No indexed content found for this job. Please ingest content first.",
                     "citations": [],
                     "confidence": "low",
-                    "grounding_notes": "Database initialization error"
+                    "grounding_notes": "Knowledge base is empty"
                 }
             
             # 1. Retrieve relevant chunks
